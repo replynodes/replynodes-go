@@ -1,0 +1,10 @@
+{
+  "generatorName": "go",
+  "outputDirName": "go",
+  "packageName": "replynodes",
+  "packageVersion": "0.1.0",
+  "gitUserId": "replynodes",
+  "gitRepoId": "replynodes-go",
+  "repositoryUrl": "https://github.com/replynodes/replynodes-go",
+  "moduleName": "github.com/replynodes/replynodes-go"
+}
