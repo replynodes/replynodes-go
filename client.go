@@ -360,30 +360,32 @@ func parameterTag(field reflect.StructField) (location, name string, required bo
 }
 
 func scalarValue(value reflect.Value) (bool, string, error) {
+	explicit := false
 	if value.Kind() == reflect.Pointer {
 		if value.IsNil() {
 			return false, "", nil
 		}
-		return scalarValue(value.Elem())
+		explicit = true
+		value = value.Elem()
 	}
 	switch value.Kind() {
 	case reflect.String:
-		if value.String() == "" {
+		if !explicit && value.String() == "" {
 			return false, "", nil
 		}
 		return true, value.String(), nil
 	case reflect.Bool:
-		if !value.Bool() {
+		if !explicit && !value.Bool() {
 			return false, "", nil
 		}
 		return true, strconv.FormatBool(value.Bool()), nil
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		if value.Int() == 0 {
+		if !explicit && value.Int() == 0 {
 			return false, "", nil
 		}
 		return true, strconv.FormatInt(value.Int(), 10), nil
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		if value.Uint() == 0 {
+		if !explicit && value.Uint() == 0 {
 			return false, "", nil
 		}
 		return true, strconv.FormatUint(value.Uint(), 10), nil

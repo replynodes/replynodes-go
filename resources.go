@@ -49,7 +49,7 @@ type AppStoreAppParams struct {
 	AppID   string `query:"appId"`
 	Country string `query:"country"`
 	Lang    string `query:"lang"`
-	Ratings bool   `query:"ratings"`
+	Ratings *bool  `query:"ratings"`
 }
 
 // AppStoreDeveloperParams contains the path and query parameters for appStoreDeveloper.
@@ -66,7 +66,7 @@ type AppStoreListParams struct {
 	Country    string `query:"country"`
 	Lang       string `query:"lang"`
 	Num        int32  `query:"num"`
-	FullDetail bool   `query:"fullDetail"`
+	FullDetail *bool  `query:"fullDetail"`
 }
 
 // AppStorePrivacyParams contains the path and query parameters for appStorePrivacy.
@@ -97,7 +97,7 @@ type AppStoreSearchParams struct {
 	Page    int32  `query:"page"`
 	Country string `query:"country"`
 	Lang    string `query:"lang"`
-	IdsOnly bool   `query:"idsOnly"`
+	IdsOnly *bool  `query:"idsOnly"`
 }
 
 // AppStoreSimilarParams contains the path and query parameters for appStoreSimilar.
@@ -315,7 +315,7 @@ type GooglePlayReviewsParams struct {
 	Country   string `query:"country"`
 	Language  string `query:"language"`
 	Limit     int32  `query:"limit"`
-	Sort      int32  `query:"sort"`
+	Sort      *int32 `query:"sort"`
 	Score     int32  `query:"score"`
 	NextToken string `query:"next_token"`
 }
@@ -379,8 +379,8 @@ type GoogleShoppingSearchParams struct {
 
 // HackerNewsItemParams contains the path and query parameters for hackerNewsItem.
 type HackerNewsItemParams struct {
-	ID    int32 `path:"id,required"`
-	Depth int32 `query:"depth"`
+	ID    *int32 `path:"id,required"`
+	Depth int32  `query:"depth"`
 }
 
 // HackerNewsSearchParams contains the path and query parameters for hackerNewsSearch.
@@ -388,7 +388,7 @@ type HackerNewsSearchParams struct {
 	Q     string `query:"q,required"`
 	Tags  string `query:"tags"`
 	Limit int32  `query:"limit"`
-	Page  int32  `query:"page"`
+	Page  *int32 `query:"page"`
 }
 
 // HackerNewsStoriesAskParams contains the path and query parameters for hackerNewsStoriesAsk.

@@ -55,6 +55,62 @@ func TestClientRequestAuthAndTypedPath(t *testing.T) {
 	}
 }
 
+func TestClientExplicitZeroAndFalseParameters(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		query := r.URL.Query()
+		switch r.URL.Path {
+		case "/v1/hackernews/search":
+			if got := query.Get("page"); got != "0" {
+				t.Errorf("hacker news page = %q, want 0", got)
+			}
+			if _, ok := query["page"]; !ok {
+				t.Error("hacker news page was omitted")
+			}
+		case "/v1/googleplay/reviews/com.example.app":
+			if got := query.Get("sort"); got != "0" {
+				t.Errorf("google play sort = %q, want 0", got)
+			}
+			if _, ok := query["sort"]; !ok {
+				t.Error("google play sort was omitted")
+			}
+		case "/v1/hackernews/item/0":
+			// The path itself proves that a required numeric zero was present.
+		case "/v1/appstore/app":
+			if got := query.Get("ratings"); got != "false" {
+				t.Errorf("app store ratings = %q, want false", got)
+			}
+			if _, ok := query["ratings"]; !ok {
+				t.Error("app store ratings was omitted")
+			}
+		default:
+			t.Errorf("unexpected request path %q", r.URL.Path)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"data":{},"meta":{}}`))
+	}))
+	defer server.Close()
+
+	client, err := NewClient("test-key", WithBaseURL(server.URL))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	zero := int32(0)
+	if _, err := client.HackerNews.Search(context.Background(), HackerNewsSearchParams{Q: "replynodes", Page: &zero}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := client.GooglePlay.Reviews(context.Background(), GooglePlayReviewsParams{ID: "com.example.app", Sort: &zero}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := client.HackerNews.Item(context.Background(), HackerNewsItemParams{ID: &zero}); err != nil {
+		t.Fatal(err)
+	}
+	includeRatings := false
+	if _, err := client.AppStore.App(context.Background(), AppStoreAppParams{Ratings: &includeRatings}); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestClientAPIErrorCarriesEnvelopeAndRequestID(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Request-Id", "header-id")

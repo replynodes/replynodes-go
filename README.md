@@ -59,6 +59,20 @@ endpoint payloads can evolve without forcing an SDK release for every data
 shape. `client.Google.Search` and `client.Web.Search` are the intentional
 compatibility aliases for the canonical `googleSearch` operation.
 
+Optional parameters are omitted when left at their zero value. Parameters
+whose valid explicit value can be zero or `false` use pointers so callers can
+distinguish omission from an explicit value: `HackerNewsSearchParams.Page`,
+`GooglePlayReviewsParams.Sort`, `HackerNewsItemParams.ID`, and the optional
+boolean fields on the App Store parameter structs. For example:
+
+```go
+zero := int32(0)
+includeRatings := false
+
+params := replynodes.HackerNewsSearchParams{Q: "ReplyNodes", Page: &zero}
+appParams := replynodes.AppStoreAppParams{Ratings: &includeRatings}
+```
+
 `Authorization: Bearer <api-key>` is added automatically. `WithBaseURL` can
 point at a local `httptest.Server` or another gateway, and `WithHTTPClient`
 allows a custom transport. The client performs exactly one HTTP request per
