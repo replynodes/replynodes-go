@@ -73,7 +73,7 @@ params := replynodes.HackerNewsSearchParams{Q: "ReplyNodes", Page: &zero}
 appParams := replynodes.AppStoreAppParams{Ratings: &includeRatings}
 ```
 
-`Authorization: Bearer <api-key>` is added automatically. `WithBaseURL` can
+`Authorization: Bearer ***` is added automatically. `WithBaseURL` can
 point at a local `httptest.Server` or another gateway, and `WithHTTPClient`
 allows a custom transport. The client performs exactly one HTTP request per
 operation and does not retry. Non-2xx responses return `*APIError` with
